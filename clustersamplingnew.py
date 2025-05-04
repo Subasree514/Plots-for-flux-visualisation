@@ -1,10 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
-#import cobra.test
+# libraries
 import os
 from os.path import join
 import cobra
@@ -27,149 +21,41 @@ from cobra.io import save_matlab_model
 #from cobra.io import model_to_pymatbridge
 
 
-# In[ ]:
-
-
 cobra_config = cobra.Configuration()
-#cobra_config.solver ="gurobi"
+## colon cancer and non-cancerous
+#model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelSW620_rs_revised.mat"))
+#model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelSW620.mat"))
+#model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelHS255T_rsmin_full_revised.mat"))
+#model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelHS255Tnew.mat.mat"))
 
+## ovarian cancer and non-cancerous
+#model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelOVKATE_rs_revised.mat"))
+#model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelOVKATE.mat"))
+#model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelOELE_rsmin_full_revised.mat"))
+#model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelOELE.mat"))
 
-# In[ ]:
+## breast cancer and non-cancerous
+model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelHCC1143_rs_revised.mat"))
+#model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelHCC1143.mat"))
+#model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelHMEL_rsmin_full_revised.mat"))
+#model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelHMEL.mat"))
 
-
-model_py_1b=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelHCC1143rslooplessfinal.mat"))#*****
 model_py_1b.solver = 'gurobi'
+
+## flux sampling analysis - we choose ACHR
 from cobra.sampling import OptGPSampler, ACHRSampler
-
-
-# In[ ]:
-
 
 achr = ACHRSampler(model_py_1b,thinning=1)
 s1a = achr.sample(100000)
-s1a.to_csv('/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models/hcc1143lrsooplessachr.csv')#*****
+
+## validate the samples
 s1a_valid = s1a[achr.validate(s1a) == "v"]
 len(s1a_valid)
-colonRS_median=s1a.median(axis = 0) #dtype=np.float64
-colonRS_median=colonRS_median[0:len(colonRS_median)]
-colonRS_median_df=pd.DataFrame(colonRS_median)
-colonRS_median_df.to_excel('/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models/hcc1143rslooplessmedian.xlsx')#*****
-##
-#optgp = OptGPSampler(model_py_1b,thinning=1)
-#s1a = optgp.sample(50000)
-#s1a.to_csv('HMELoptgp.csv')
-#s1a_valid = s1a[optgp.validate(s1a) == "v"]
-#len(s1a_valid)
+## save the data
+s1a.to_csv('/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models/hcc1143lrsooplessachr.csv')
 
-
-# In[ ]:
-
-
-model_py_1c=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelOVKATElooplessfinal.mat"))#*****
-#model_py_1c.solver = 'gurobi'
-from cobra.sampling import OptGPSampler, ACHRSampler
-
-
-# In[ ]:
-
-
-achr = ACHRSampler(model_py_1c,thinning=1)
-s2 = achr.sample(100000)
-s2.to_csv('/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models/ovkatelooplessachr.csv')#*****
-s2_valid = s2[achr.validate(s2) == "v"]
-len(s2_valid)
-colon_median=s2.median(axis = 0) #dtype=np.float64
-colon_median=colon_median[0:len(colon_median)]
-colon_median_df=pd.DataFrame(colon_median)
-colon_median_df.to_excel('/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models/ovkatelooplessmedian.xlsx')#*****
-##
-#optgp = OptGPSampler(model_py_1b,thinning=1)
-#s1a = optgp.sample(50000)
-#s1a.to_csv('HMELoptgp.csv')
-#s1a_valid = s1a[optgp.validate(s1a) == "v"]
-#len(s1a_valid)
-
-
-# In[ ]:
-
-
-model_py_1d=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelOVKATErslooplessfinal.mat"))#*****
-#model_py_1d.solver = 'gurobi'
-from cobra.sampling import OptGPSampler, ACHRSampler
-
-
-# In[ ]:
-
-
-achr = ACHRSampler(model_py_1d,thinning=1)
-s2a = achr.sample(100000)
-s2a.to_csv('/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models/ovkatersooplessachr.csv')#*****
-s2a_valid = s2a[achr.validate(s2a) == "v"]
-len(s2a_valid)
-colonRS_median=s2a.median(axis = 0) #dtype=np.float64
-colonRS_median=colonRS_median[0:len(colonRS_median)]
-colonRS_median_df=pd.DataFrame(colonRS_median)
-colonRS_median_df.to_excel('/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models/ovkaterslooplessmedian.xlsx')#*****
-##
-#optgp = OptGPSampler(model_py_1b,thinning=1)
-#s1a = optgp.sample(50000)
-#s1a.to_csv('HMELoptgp.csv')
-#s1a_valid = s1a[optgp.validate(s1a) == "v"]
-#len(s1a_valid)
-
-
-# In[ ]:
-
-
-model_py_1e=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelSW620looplessfinal.mat"))#*****
-#model_py_1e.solver = 'gurobi'
-from cobra.sampling import OptGPSampler, ACHRSampler
-
-
-# In[ ]:
-
-
-achr = ACHRSampler(model_py_1e,thinning=1)
-s3 = achr.sample(100000)
-s3.to_csv('/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models/sw620looplessachr.csv')#*****
-s3_valid = s3[achr.validate(s3) == "v"]
-len(s3_valid)
-colon_median=s3.median(axis = 0) #dtype=np.float64
-colon_median=colon_median[0:len(colon_median)]
-colon_median_df=pd.DataFrame(colon_median)
-colon_median_df.to_excel('/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models/sw620looplessmedian.xlsx')#*****
-##
-#optgp = OptGPSampler(model_py_1b,thinning=1)
-#s1a = optgp.sample(50000)
-#s1a.to_csv('HMELoptgp.csv')
-#s1a_valid = s1a[optgp.validate(s1a) == "v"]
-#len(s1a_valid)
-
-
-# In[ ]:
-
-
-model_py_1f=cobra.io.load_matlab_model(join(r'/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models',"modelSW620rslooplessfinal.mat"))#*****
-#model_py_1f.solver = 'gurobi'
-from cobra.sampling import OptGPSampler, ACHRSampler
-
-
-# In[ ]:
-
-
-achr = ACHRSampler(model_py_1f,thinning=1)
-s3a = achr.sample(100000)
-s3a.to_csv('/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models/sw620lrsooplessachr.csv')#*****
-s3a_valid = s3a[achr.validate(s3a) == "v"]
-len(s3a_valid)
-colonRS_median=s3a.median(axis = 0) #dtype=np.float64
-colonRS_median=colonRS_median[0:len(colonRS_median)]
-colonRS_median_df=pd.DataFrame(colonRS_median)
-colonRS_median_df.to_excel('/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models/sw620rslooplessmedian.xlsx')#*****
-##
-#optgp = OptGPSampler(model_py_1b,thinning=1)
-#s1a = optgp.sample(50000)
-#s1a.to_csv('HMELoptgp.csv')
-#s1a_valid = s1a[optgp.validate(s1a) == "v"]
-#len(s1a_valid)
-
+## find median and save the data
+cancerRS_median=s1a.median(axis = 0) #dtype=np.float64
+cancerRS_median=cancerRS_median[0:len(cancerRS_median)]
+cancerRS_median_df=pd.DataFrame(cancerRS_median)
+cancerRS_median_df.to_excel('/home/ibsc/Downloads/Subasree MEJ models/MEJ loop models/hcc1143rslooplessmedian.xlsx')
